@@ -1,0 +1,108 @@
+#include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+typedef struct Node 
+{
+	int info;
+	Node *left;
+	Node *right;
+	Node *prev;
+} OBJ;
+OBJ *top = NULL;
+OBJ *head = NULL;
+OBJ *MAX = NULL;
+OBJ *MIN = NULL;
+OBJ *add(OBJ *obj, int napr,int &max,int &min)
+{
+	OBJ *ptr = new OBJ;
+	ptr->left = ptr->right = 0;
+	if (obj==NULL){
+	    top=ptr;
+	    ptr->info = 10+ rand() % 98;
+    }
+	else
+	{
+		if (napr==1){
+			obj->left=ptr;
+			ptr->info = 10+ rand() % 98;
+			if (max<ptr->info){
+				MAX=ptr;
+				max=ptr->info;
+			} 
+			if (min>ptr->info){
+				MIN=ptr;
+				min=ptr->info;
+			}
+			ptr->prev=obj;
+		}
+		else{
+			obj->right=ptr;
+			ptr->info = 10+ rand() % 98;
+			if (max<ptr->info){
+				MAX=ptr;
+				max=ptr->info;
+			} 
+			if (min>ptr->info){
+				MIN=ptr;
+				min=ptr->info;
+			}
+			ptr->prev=obj;
+		}
+	}
+}
+void vivod(OBJ *obj)
+{
+	OBJ *p = obj;
+	cout<<setw(13)<<p->info<<endl;
+	cout<<setw(7)<<p->left->info<<setw(12)<<p->right->info<<endl;
+	cout<<setw(4)<<p->left->left->info<<setw(6)<<p->left->right->info<<setw(6)<<p->right->left->info<<setw(6)<<p->right->right->info<<endl;
+	cout<<p->left->left->left->info<<" "<<p->left->left->right->info<<" "<<p->left->right->left->info<<" "<<p->left->right->right->info<<" "<<p->right->left->left->info<<" "<<p->right->left->right->info<<" "<<p->right->right->left->info<<" "<<p->right->right->right->info<<" "<<endl;
+
+	
+}
+void zamena()
+{
+	int i = 0;
+	i=MAX->info;
+	MAX->info=MIN->info;
+	MIN->info=i;
+}
+int main()
+{
+	srand(time(0));
+	setlocale(LC_ALL, "Russian");
+	int max=0,min=100;
+	add(NULL,1,max,min);
+	add(top,1,max,min);
+	add(top,0,max,min);
+	head = top->left;
+	add(head,1,max,min);
+	add(head,0,max,min);
+	head=head->left;
+	add(head,1,max,min);
+	add(head,0,max,min);
+	head=head->prev;
+	head=head->right;
+	add(head,1,max,min);
+	add(head,0,max,min);
+	head=top->right;
+	add(head,1,max,min);
+	add(head,0,max,min);
+	head=head->left;
+	add(head,1,max,min);
+	add(head,0,max,min);
+	head=head->prev;
+	head=head->right;
+	add(head,1,max,min);
+	add(head,0,max,min);
+	cout<<"Максимальный элемент: "<<max<<" Минимальный элемент: "<<min<<endl;
+	cout<<"Дерево до преобразования"<<endl;
+	
+	vivod(top);
+	cout<<"Дерево после преобразования"<<endl;
+	zamena();
+	vivod(top);
+}
